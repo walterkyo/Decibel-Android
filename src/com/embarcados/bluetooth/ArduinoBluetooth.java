@@ -21,7 +21,7 @@ import android.widget.Toast;
  *	Class with static methods to handle the bluetooth connection with the Arduino.
  *
  */
-public class ArduinoBluetooth {
+class ArduinoBluetooth extends AbstractBluetoothReceiver {
 
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int DEVICE_PIN = 1234;
@@ -32,19 +32,23 @@ public class ArduinoBluetooth {
 	private static final String ANDROID_NAME = "ANDROID_SERVER";
 	private static final UUID ANDROID_UUID = UUID.randomUUID();
 	
-	private final BluetoothAdapter bluetoothAdapter;
+	private  BluetoothAdapter bluetoothAdapter;
 	
-	private final Context context;
+	private  Context context;
 	
 	private static ArduinoBluetooth INSTANCE;
 	
 	public boolean isRunning = false;
 	
-	private IBluetoothListener listener;
+	private IBluetoothReceiveListener listener;
 	
-	public void setBluetoothListener(IBluetoothListener listener) {
+	public void setBluetoothListener(IBluetoothReceiveListener listener) {
 		
 		this.listener = listener;
+	}
+	
+	public ArduinoBluetooth() {
+		
 	}
 	
 	private ArduinoBluetooth(Context context) {
@@ -154,10 +158,28 @@ public class ArduinoBluetooth {
 					
 					String newValue = new String(buffer).replace("\n", "");
 					
-					listener.onNewValueAcquired(Integer.valueOf(newValue));
+					listener.onNewValue(Integer.valueOf(newValue));
 					
 				} catch (IOException e) { }
 			}
 		}
+	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
 	}
 }

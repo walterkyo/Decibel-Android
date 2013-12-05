@@ -1,9 +1,6 @@
 package com.embarcados.activity;
 
 import com.embarcados.decibel_android.R;
-import com.embarcados.decibel_android.R.layout;
-import com.embarcados.decibel_android.R.menu;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;

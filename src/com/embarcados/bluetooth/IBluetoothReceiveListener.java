@@ -7,7 +7,7 @@ package com.embarcados.bluetooth;
  * @author Mauricio L. Dau <mauricioldau@gmail.com>
  *
  */
-public interface IBluetoothListener {
+public interface IBluetoothReceiveListener {
 
-	public void onNewValueAcquired(int newValue);
+	public void onNewValue(int newValue);
 }

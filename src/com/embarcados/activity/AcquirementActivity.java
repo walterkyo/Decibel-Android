@@ -3,24 +3,31 @@
  */
 package com.embarcados.activity;
 
-import java.util.Set;
-
+import com.embarcados.bluetooth.BluetoothReceiverFactory;
+import com.embarcados.bluetooth.IBluetoothReceiveListener;
+import com.embarcados.bluetooth.IBluetoothReceiver;
 import com.embarcados.decibel_android.R;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.widget.TextView;
 
 /**
  * @author Mauricio L. Dau <mauricioldau@gmail.com>
  *
  */
-public class AcquirementActivity extends Activity {
+public class AcquirementActivity extends Activity implements IBluetoothReceiveListener {
 
+	private final IBluetoothReceiver bluetoothReceiver;
+	
+	private TextView valueTextView;
+	
 	public AcquirementActivity() {
+		
+		this.bluetoothReceiver = BluetoothReceiverFactory.newFakeBTReceiver();
+		
+		this.bluetoothReceiver.setOnBluetoothReceiveListener(this);
+		this.bluetoothReceiver.setContext(this);
 		
 	}
 	
@@ -30,50 +37,38 @@ public class AcquirementActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.acquirement_layout);
+		
+		this.valueTextView = (TextView) this.findViewById(R.id.textView1);
 	}
-	
+
 	@Override
 	protected void onStart() {
 
 		super.onStart();
 		
+		this.bluetoothReceiver.start();
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		super.onActivityResult(requestCode, resultCode, data);
+	protected void onStop() {
 		
-		switch(requestCode) {
+		super.onStop();
 		
-			case REQUEST_ENABLE_BT: {
-			
-				if(resultCode == RESULT_OK) {
-					
-					Toast.makeText(this, "Bluetooth ON", Toast.LENGTH_LONG).show();
-					beginConnection();
-					
-				} else {
-					
-					Toast.makeText(this, "Bluetooth OFF", Toast.LENGTH_LONG).show();
-				}
-			}
-		}
+		this.bluetoothReceiver.stop();
 	}
 	
-	private void beginConnection() {
-		
-		Set<BluetoothDevice> pairedDevices = this.bluetoothAdapter.getBondedDevices();
-		// If there are paired devices
-		if (pairedDevices.size() > 0) {
-		    // Loop through paired devices
-		    for (BluetoothDevice device : pairedDevices) {
-		        
-		    	if(device.getName().equals(DEVICE_NAME)) {
+	@Override
+	protected void onDestroy() {
 
-		    		device.
-		    	}
-		    }
-		}
+		super.onDestroy();
+		
+		this.bluetoothReceiver.close();
 	}
+	
+	@Override
+	public void onNewValue(int newValue) {
+
+		this.valueTextView.setText(String.valueOf(newValue));
+	}
+	
 }
