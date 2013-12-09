@@ -24,10 +24,7 @@ import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint.Align;
 
 /**
  * @author Mauricio L. Dau <mauricioldau@gmail.com>
@@ -47,7 +44,7 @@ public class AcquirementActivity extends Activity implements IBluetoothReceiveLi
 	
 	public AcquirementActivity() {
 		
-		this.bluetoothReceiver = BluetoothReceiverFactory.newFakeBTReceiver();
+		this.bluetoothReceiver = BluetoothReceiverFactory.newArduinoBTReceiver();
 		
 		this.bluetoothReceiver.setOnBluetoothReceiveListener(this);
 		this.bluetoothReceiver.setContext(this);
@@ -62,6 +59,7 @@ public class AcquirementActivity extends Activity implements IBluetoothReceiveLi
 		setContentView(R.layout.acquirement_layout);	
 		this.valueTextView = (TextView) this.findViewById(R.id.textView1);
 
+		////////////////////////////////////////////
 		//Grafico dinamico
 		dataset = new TimeSeries("Valores");
 		mDataset = new XYMultipleSeriesDataset();
@@ -85,6 +83,8 @@ public class AcquirementActivity extends Activity implements IBluetoothReceiveLi
 		mRenderer.setGridColor(Color.DKGRAY);
 		
 		mRenderer.addSeriesRenderer(renderer);
+		// END Graph code
+		//////////////////////////////////////////
 		
 	}
 
