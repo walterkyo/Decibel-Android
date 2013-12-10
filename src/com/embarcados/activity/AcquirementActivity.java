@@ -44,7 +44,7 @@ public class AcquirementActivity extends Activity implements IBluetoothReceiveLi
 	
 	public AcquirementActivity() {
 		
-		this.bluetoothReceiver = BluetoothReceiverFactory.newArduinoBTReceiver();
+		this.bluetoothReceiver = BluetoothReceiverFactory.newFakeBTReceiver();
 		
 		this.bluetoothReceiver.setOnBluetoothReceiveListener(this);
 		this.bluetoothReceiver.setContext(this);

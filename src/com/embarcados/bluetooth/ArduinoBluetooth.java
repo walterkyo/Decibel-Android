@@ -37,12 +37,12 @@ class ArduinoBluetooth extends AbstractBluetoothReceiver {
 	int readBufferPosition = 0;
 	byte[] readBuffer = new byte[1024];
 	
-	private IBluetoothReceiveListener listener;
-	
-	public void setBluetoothListener(IBluetoothReceiveListener listener) {
-		
-		this.listener = listener;
-	}
+//	private IBluetoothReceiveListener listener;
+//	
+//	public void setBluetoothListener(IBluetoothReceiveListener listener) {
+//		
+//		this.listener = listener;
+//	}
 	
 	public ArduinoBluetooth() {
 		
@@ -117,6 +117,8 @@ class ArduinoBluetooth extends AbstractBluetoothReceiver {
 					
 					try {
 						
+						Thread.sleep(250);
+						
 						int bytesAvailable = inStream.available();
 						
 						if (bytesAvailable > 0) {
@@ -125,35 +127,28 @@ class ArduinoBluetooth extends AbstractBluetoothReceiver {
 							
 							inStream.read(packetBytes);
 							
-							for (int i = 0; i < bytesAvailable; i++) {
+							final byte b = packetBytes[0];
+							
+//							byte[] encodedBytes = new byte[readBufferPosition];
+							
+//							System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
+							
+//							final String data = new String(encodedBytes, "US-ASCII");
+							
+							readBufferPosition = 0;
+							
+							handler.post(new Runnable() {
 								
-								byte b = packetBytes[i];
-								
-								if (b == delimiter) {
-									
-									byte[] encodedBytes = new byte[readBufferPosition];
-									
-									System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
-									
-									final String data = new String(encodedBytes, "US-ASCII");
-									
-									readBufferPosition = 0;
-									
-									handler.post(new Runnable() {
-										
-										public void run() {
+								public void run() {
 
-											listener.onNewValue(Integer.valueOf(data));
-										}
-									});
-								} else {
-									
-									readBuffer[readBufferPosition++] = b;
+									listener.onNewValue(Integer.valueOf(b));
 								}
-							}
+							});
 						}
 					} catch (IOException ex) {
 						stopWorker = true;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 			}
